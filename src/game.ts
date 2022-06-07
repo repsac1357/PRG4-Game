@@ -10,27 +10,18 @@ export class Game {
   fishes: Fish[] = [];
   loader: PIXI.Loader;
   shark: Shark;
-  constructor() {
-    console.log("Game created");
-    //
-    // STAP 1 - maak een pixi canvas
-    //
-    this.pixi = new PIXI.Application({
-      width: window.innerWidth,
-      height: window.innerHeight,
-      forceCanvas: true
-    });
-    document.body.appendChild(this.pixi.view);
 
-    //
-    // STAP 2 - preload alle afbeeldingen
-    //
-    this.loader = new PIXI.Loader();
-    this.loader
-      .add("fishTexture", fishImage)
-      .add("waterTexture", waterImage)
-      .add("sharkTexture", sharkImage);
-    this.loader.load(() => this.loadCompleted());
+    constructor(pixi: PIXI.Application) {
+      this.pixi = pixi
+      //
+      // STAP 2 - preload alle afbeeldingen
+      //
+      this.loader = new PIXI.Loader();
+      this.loader
+        .add("fishTexture", fishImage)
+        .add("waterTexture", waterImage)
+        .add("sharkTexture", sharkImage);
+      this.loader.load(() => this.loadCompleted());
   }
   //
   // STAP 3 - maak een sprite als de afbeeldingen zijn geladen
@@ -110,4 +101,3 @@ export class Game {
     );
   }
 }
-new Game()
