@@ -46,7 +46,7 @@ export class Game {
     );
     this.pixi.stage.addChild(background);
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 20; i++) {
       let fish = new Fish(this.loader.resources["fishTexture"].texture!, this);
       this.fishes.push(fish);
       this.pixi.stage.addChild(fish);
@@ -63,13 +63,28 @@ export class Game {
   }
   update(delta: number) {
     this.shark.update();
+
+    //doorloopt alle fishes
     for (const fish of this.fishes) {
       fish.update(delta);
-      if (this.collision(this.shark, fish)) {
-        // console.log("SHARK ATTACK!!!!");
-        this.pixi.stage.removeChild(fish);
+      for (const fish2 of this.fishes){
+
+        //collision tussen fish en fish2
+        if (fish !=fish2) {
+        if ( this.collision(fish, fish2) ) {
+          fish.tint = 0xff0000          
+        }
+
+        }
+
+        //collision tussen de shark en fish
+        if (this.collision(this.shark, fish)) {
+          // console.log("SHARK ATTACK!!!!");
+          this.pixi.stage.removeChild(fish);
+        }
       }
     }
+
     // when the shark is the only survivor
     if (
       this.pixi.stage.children.filter((object) => object instanceof Fish)

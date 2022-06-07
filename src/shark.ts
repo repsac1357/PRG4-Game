@@ -31,7 +31,7 @@ export class Shark extends PIXI.Sprite {
   }
 
   public update() {
-    this.x -= 4;
+    this.x -= 10;
     this.y += this.speed;
 
     this.keepInScreen();

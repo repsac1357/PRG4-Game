@@ -556,7 +556,7 @@ class Game {
         let background = new _pixiJs.Sprite(this.loader.resources["waterTexture"].texture);
         background.scale.set(window.innerWidth / background.getBounds().width, window.innerHeight / background.getBounds().height);
         this.pixi.stage.addChild(background);
-        for(let i = 0; i < 10; i++){
+        for(let i = 0; i < 20; i++){
             let fish = new _fish.Fish(this.loader.resources["fishTexture"].texture, this);
             this.fishes.push(fish);
             this.pixi.stage.addChild(fish);
@@ -569,10 +569,18 @@ class Game {
     }
     update(delta) {
         this.shark.update();
+        //doorloopt alle fishes
         for (const fish of this.fishes){
             fish.update(delta);
-            if (this.collision(this.shark, fish)) // console.log("SHARK ATTACK!!!!");
-            this.pixi.stage.removeChild(fish);
+            for (const fish2 of this.fishes){
+                //collision tussen fish en fish2
+                if (fish != fish2) {
+                    if (this.collision(fish, fish2)) fish.tint = 16711680;
+                }
+                //collision tussen de shark en fish
+                if (this.collision(this.shark, fish)) // console.log("SHARK ATTACK!!!!");
+                this.pixi.stage.removeChild(fish);
+            }
         }
         // when the shark is the only survivor
         if (this.pixi.stage.children.filter((object)=>object instanceof _fish.Fish
@@ -594,6 +602,7 @@ class Game {
         return bounds1.x < bounds2.x + bounds2.width && bounds1.x + bounds1.width > bounds2.x && bounds1.y < bounds2.y + bounds2.height && bounds1.y + bounds1.height > bounds2.y;
     }
 }
+new Game();
 
 },{"pixi.js":"dsYej","./images/fish.png":"3tLwD","./images/water.jpg":"jj9Eg","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./images/shark.png":"7HgQx","./fish":"7VsCH","./shark":"kN3uI"}],"dsYej":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -37197,7 +37206,7 @@ class Shark extends _pixiJs.Sprite {
         if (e.key === "ArrowUp" || e.key === "ArrowDown") this.speed = 0;
     }
     update() {
-        this.x -= 4;
+        this.x -= 10;
         this.y += this.speed;
         this.keepInScreen();
     }
