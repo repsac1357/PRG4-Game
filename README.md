@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # PixiJS Startproject
 
 Dit is een startproject voor het werken met ***PixiJS en Typescript***. Installeer eerst [NodeJS](https://nodejs.org/en/) en [Visual Studio Code](https://code.visualstudio.com)
@@ -61,3 +62,11 @@ De code in `Game.ts` toont een canvas en een sprite.
 - [Pixi Preloader documentation](https://pixijs.download/release/docs/PIXI.Loader.html)
 - [NodeJS](https://nodejs.org/en/) en [Visual Studio Code](https://code.visualstudio.com)
 - [Advanced: zelf een PixiJS Typescript project opzetten from scratch](./scratch.MD)
+=======
+# PRG4-Game
+Game
+
+de 3 onderwerpen:
+
+Adventure - search - mexicaanse worstelaars
+>>>>>>> 16ee745ac4a7690853659bdbe08d584d39cab8da
