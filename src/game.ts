@@ -1,18 +1,26 @@
 import * as PIXI from "pixi.js";
+import Matter from "matter-js";
 import fishImage from "./images/fish.png";
 import gameAchtergrondImage from "./images/gameAchtergrond.jpg";
-import sharkImage from "./images/shark.png";
+import wrestlerImage from "./images/wrestler.png";
+import platformImage from "./images/platform.png";
 import { Fish } from "./fish";
-import { Shark } from "./shark";
+import { Ground } from "./ground";
+import { Wrestler } from "./wrestler";
+import soundtrack from "url:./soundtrack/mexico.mp3";
+
 
 export class Game {
+  public engine: Matter.Engine;
   pixi: PIXI.Application;
   fishes: Fish[] = [];
   loader: PIXI.Loader;
-  shark: Shark;
+  wrestler: Wrestler;
 
     constructor(pixi: PIXI.Application) {
       this.pixi = pixi
+
+      this.engine = Matter.Engine.create();
       //
       // STAP 2 - preload alle afbeeldingen
       //
@@ -20,40 +28,52 @@ export class Game {
       this.loader
         .add("fishTexture", fishImage)
         .add("gameAchtergrondTexture", gameAchtergrondImage)
-        .add("sharkTexture", sharkImage);
+        .add("wrestlerTexture", wrestlerImage)
+        .add("soundtrack", soundtrack)
+        .add("platformTexture", platformImage)
       this.loader.load(() => this.loadCompleted());
   }
   //
   // STAP 3 - maak een sprite als de afbeeldingen zijn geladen
   //
   loadCompleted() {
-    // first load background
-    let background = new PIXI.Sprite(
+    // first load backplatform
+    let soundtrack = (this.loader.resources["soundtrack"].data!)
+    soundtrack.play()
+    let backplatform = new PIXI.Sprite(
       this.loader.resources["gameAchtergrondTexture"].texture!
     );
-    background.scale.set(
-      window.innerWidth / background.getBounds().width,
-      window.innerHeight / background.getBounds().height
+    backplatform.scale.set(
+      window.innerWidth / backplatform.getBounds().width,
+      window.innerHeight / backplatform.getBounds().height
     );
-    this.pixi.stage.addChild(background);
+    this.pixi.stage.addChild(backplatform);
 
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 5; i++) {
       let fish = new Fish(this.loader.resources["fishTexture"].texture!, this);
       this.fishes.push(fish);
       this.pixi.stage.addChild(fish);
     }
 
-    // create Shark
-    this.shark = new Shark(
-      this.loader.resources["sharkTexture"].texture!,
+    // create wrestler
+
+        let platform = new Ground(
+      this.loader.resources["platformTexture"].texture!,
       this
     );
-    this.pixi.stage.addChild(this.shark);
+    this.pixi.stage.addChild(platform);
+    this.wrestler = new Wrestler(
+      this.loader.resources["wrestlerTexture"].texture!,
+      this
+    );
+    this.pixi.stage.addChild(this.wrestler);
+
 
     this.pixi.ticker.add((delta: number) => this.update(delta));
+    Matter.Engine.update(this.engine, 1000 / 60);
   }
   update(delta: number) {
-    this.shark.update();
+    this.wrestler.update();
 
     //doorloopt alle fishes
     for (const fish of this.fishes) {
@@ -68,15 +88,15 @@ export class Game {
 
         }
 
-        //collision tussen de shark en fish
-        if (this.collision(this.shark, fish)) {
-          // console.log("SHARK ATTACK!!!!");
+        //collision tussen de wrestler en fish
+        if (this.collision(this.wrestler, fish)) {
+          // console.log("Wrestler ATTACK!!!!");
           this.pixi.stage.removeChild(fish);
         }
       }
     }
 
-    // when the shark is the only survivor
+    // when the wrestler is the only survivor
     if (
       this.pixi.stage.children.filter((object) => object instanceof Fish)
         .length === 0

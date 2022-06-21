@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js'
+import Matter from "matter-js";
 import { Button } from './button'
 import { Game } from './game'
 import mexicoAchtergrondImage from "./images/mexicoAchtergrond.jpg";

@@ -1,4 +1,5 @@
 import * as PIXI from "pixi.js";
+import Matter from "matter-js";
 import { Game } from "./game";
 
 export class Fish extends PIXI.Sprite {
@@ -9,12 +10,12 @@ export class Fish extends PIXI.Sprite {
     super(texture);
     this.game = game;
 
-    this.speed = Math.random() * 6 + 1;
+    this.speed = Math.random() * 4 + 1;
     this.x = Math.random() * game.pixi.screen.right;
     this.y = Math.random() * game.pixi.screen.bottom;
 
     this.tint = Math.random() * 0xffffff;
-    this.scale.set(-1, 1);
+    this.scale.set(-0.5, 0.5);
 
     this.interactive = true;
     this.on("pointerdown", () => this.onClick());

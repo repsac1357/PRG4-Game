@@ -1,16 +1,16 @@
 import * as PIXI from "pixi.js";
 import { Game } from "./game";
 
-export class Shark extends PIXI.Sprite {
+export class Wrestler extends PIXI.Sprite {
   private xspeed: number = 0;
   private yspeed: number = 0;
   private game: Game;
   constructor(texture: PIXI.Texture, game: Game) {
     super(texture);
     this.game = game;
-    console.log("shark created");
-    this.x = game.pixi.screen.width - this.getBounds().width;
-    this.y = Math.random() * game.pixi.screen.height;
+    console.log("wrestler created");
+    this.x = game.pixi.screen.width/2
+    this.y = game.pixi.screen.height/2
     this.scale.set(-1, 1);
 
     window.addEventListener("keydown", (e: KeyboardEvent) => this.onKeyDown(e));
@@ -18,12 +18,12 @@ export class Shark extends PIXI.Sprite {
   }
 
   onKeyDown(e: KeyboardEvent): any {
-    if (e.key === "ArrowUp") {
-      this.yspeed = -3;
-    }
-    if (e.key === "ArrowDown") {
-      this.yspeed = 3;
-    }
+    // // if (e.key === "ArrowUp") {
+    // //   this.yspeed = -3;
+    // // }
+    // // if (e.key === "ArrowDown") {
+    // //   this.yspeed = 3;
+    // }
     if (e.key === "ArrowLeft") {
       this.xspeed = -3;
     }
