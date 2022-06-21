@@ -521,6 +521,8 @@ parcelHelpers.export(exports, "Startmenu", ()=>Startmenu
 var _pixiJs = require("pixi.js");
 var _button = require("./button");
 var _game = require("./game");
+var _mexicoAchtergrondJpg = require("./images/mexicoAchtergrond.jpg");
+var _mexicoAchtergrondJpgDefault = parcelHelpers.interopDefault(_mexicoAchtergrondJpg);
 class Startmenu {
     constructor(){
         console.log("Game created");
@@ -530,6 +532,23 @@ class Startmenu {
             forceCanvas: true
         });
         document.body.appendChild(this._pixi.view);
+        //
+        // STAP 2 - preload alle afbeeldingen
+        //
+        this.loader = new _pixiJs.Loader();
+        this.loader.add("mexicoAchtergrondTexture", _mexicoAchtergrondJpgDefault.default);
+        this.loader.load(()=>this.loadCompleted()
+        );
+    }
+    //
+    // STAP 3 - maak een sprite als de afbeeldingen zijn geladen
+    //
+    loadCompleted() {
+        // first load background
+        let background = new _pixiJs.Sprite(this.loader.resources["mexicoAchtergrondTexture"].texture);
+        background.scale.set(window.innerWidth / background.getBounds().width, window.innerHeight / background.getBounds().height);
+        this._pixi.stage.addChild(background);
+        // sprite bg
         this.button = new _button.Button(this._pixi.screen.width / 2, this._pixi.screen.height / 2);
         this._pixi.stage.addChild(this.button);
         this.button.on("pointerdown", ()=>this.onclick()
@@ -542,88 +561,7 @@ class Startmenu {
 }
 new Startmenu();
 
-},{"./game":"edeGs","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","pixi.js":"dsYej","./button":"hHDeU"}],"edeGs":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "Game", ()=>Game
-);
-var _pixiJs = require("pixi.js");
-var _fishPng = require("./images/fish.png");
-var _fishPngDefault = parcelHelpers.interopDefault(_fishPng);
-var _waterJpg = require("./images/water.jpg");
-var _waterJpgDefault = parcelHelpers.interopDefault(_waterJpg);
-var _sharkPng = require("./images/shark.png");
-var _sharkPngDefault = parcelHelpers.interopDefault(_sharkPng);
-var _fish = require("./fish");
-var _shark = require("./shark");
-class Game {
-    fishes = [];
-    constructor(pixi){
-        this.pixi = pixi;
-        //
-        // STAP 2 - preload alle afbeeldingen
-        //
-        this.loader = new _pixiJs.Loader();
-        this.loader.add("fishTexture", _fishPngDefault.default).add("waterTexture", _waterJpgDefault.default).add("sharkTexture", _sharkPngDefault.default);
-        this.loader.load(()=>this.loadCompleted()
-        );
-    }
-    //
-    // STAP 3 - maak een sprite als de afbeeldingen zijn geladen
-    //
-    loadCompleted() {
-        // first load background
-        let background = new _pixiJs.Sprite(this.loader.resources["waterTexture"].texture);
-        background.scale.set(window.innerWidth / background.getBounds().width, window.innerHeight / background.getBounds().height);
-        this.pixi.stage.addChild(background);
-        for(let i = 0; i < 20; i++){
-            let fish = new _fish.Fish(this.loader.resources["fishTexture"].texture, this);
-            this.fishes.push(fish);
-            this.pixi.stage.addChild(fish);
-        }
-        // create Shark
-        this.shark = new _shark.Shark(this.loader.resources["sharkTexture"].texture, this);
-        this.pixi.stage.addChild(this.shark);
-        this.pixi.ticker.add((delta)=>this.update(delta)
-        );
-    }
-    update(delta) {
-        this.shark.update();
-        //doorloopt alle fishes
-        for (const fish of this.fishes){
-            fish.update(delta);
-            for (const fish2 of this.fishes){
-                //collision tussen fish en fish2
-                if (fish != fish2) {
-                    if (this.collision(fish, fish2)) fish.tint = 16711680;
-                }
-                //collision tussen de shark en fish
-                if (this.collision(this.shark, fish)) // console.log("SHARK ATTACK!!!!");
-                this.pixi.stage.removeChild(fish);
-            }
-        }
-        // when the shark is the only survivor
-        if (this.pixi.stage.children.filter((object)=>object instanceof _fish.Fish
-        ).length === 0) {
-            console.log("YOU WIN");
-            let text = new _pixiJs.Text("You WIN!!", {
-                fill: [
-                    "#ffffff"
-                ]
-            });
-            text.x = this.pixi.screen.width / 2;
-            text.y = this.pixi.screen.height / 2;
-            this.pixi.stage.addChild(text);
-        }
-    }
-    collision(sprite1, sprite2) {
-        const bounds1 = sprite1.getBounds();
-        const bounds2 = sprite2.getBounds();
-        return bounds1.x < bounds2.x + bounds2.width && bounds1.x + bounds1.width > bounds2.x && bounds1.y < bounds2.y + bounds2.height && bounds1.y + bounds1.height > bounds2.y;
-    }
-}
-
-},{"pixi.js":"dsYej","./images/fish.png":"MxhAt","./images/water.jpg":"8pgKm","./images/shark.png":"g0ugm","./fish":"7VsCH","./shark":"kN3uI","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dsYej":[function(require,module,exports) {
+},{"pixi.js":"dsYej","./button":"hHDeU","./game":"edeGs","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./images/mexicoAchtergrond.jpg":"1xDNr"}],"dsYej":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "utils", ()=>_utils
@@ -37120,7 +37058,115 @@ function __extends(d, b) {
     return AnimatedSprite1;
 }(_sprite.Sprite);
 
-},{"@pixi/core":"7PEF8","@pixi/sprite":"9mbxh","@pixi/ticker":"8ekG7","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"MxhAt":[function(require,module,exports) {
+},{"@pixi/core":"7PEF8","@pixi/sprite":"9mbxh","@pixi/ticker":"8ekG7","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hHDeU":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Button", ()=>Button
+);
+var _pixiJs = require("pixi.js");
+class Button extends _pixiJs.Graphics {
+    constructor(x, y){
+        super();
+        this.beginFill(16759296);
+        this.drawRoundedRect(0, 0, 250, 80, 15);
+        this.endFill();
+        this.x = x - this.getBounds().width / 2;
+        this.y = y - this.getBounds().height / 2;
+        const startText = new _pixiJs.Text("Start Game", {
+            "fontFamily": "\"Lucida Console\", Monaco, monospace",
+            "fontSize": 30,
+            "fontWeight": "bold"
+        });
+        startText.x = this.getBounds().width / 2;
+        startText.x = this.getBounds().height / 3;
+        this.addChild(startText);
+        this.buttonMode = true;
+        this.interactive = true;
+    }
+}
+
+},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"edeGs":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Game", ()=>Game
+);
+var _pixiJs = require("pixi.js");
+var _fishPng = require("./images/fish.png");
+var _fishPngDefault = parcelHelpers.interopDefault(_fishPng);
+var _gameAchtergrondJpg = require("./images/gameAchtergrond.jpg");
+var _gameAchtergrondJpgDefault = parcelHelpers.interopDefault(_gameAchtergrondJpg);
+var _sharkPng = require("./images/shark.png");
+var _sharkPngDefault = parcelHelpers.interopDefault(_sharkPng);
+var _fish = require("./fish");
+var _shark = require("./shark");
+class Game {
+    fishes = [];
+    constructor(pixi){
+        this.pixi = pixi;
+        //
+        // STAP 2 - preload alle afbeeldingen
+        //
+        this.loader = new _pixiJs.Loader();
+        this.loader.add("fishTexture", _fishPngDefault.default).add("gameAchtergrondTexture", _gameAchtergrondJpgDefault.default).add("sharkTexture", _sharkPngDefault.default);
+        this.loader.load(()=>this.loadCompleted()
+        );
+    }
+    //
+    // STAP 3 - maak een sprite als de afbeeldingen zijn geladen
+    //
+    loadCompleted() {
+        // first load background
+        let background = new _pixiJs.Sprite(this.loader.resources["gameAchtergrondTexture"].texture);
+        background.scale.set(window.innerWidth / background.getBounds().width, window.innerHeight / background.getBounds().height);
+        this.pixi.stage.addChild(background);
+        for(let i = 0; i < 20; i++){
+            let fish = new _fish.Fish(this.loader.resources["fishTexture"].texture, this);
+            this.fishes.push(fish);
+            this.pixi.stage.addChild(fish);
+        }
+        // create Shark
+        this.shark = new _shark.Shark(this.loader.resources["sharkTexture"].texture, this);
+        this.pixi.stage.addChild(this.shark);
+        this.pixi.ticker.add((delta)=>this.update(delta)
+        );
+    }
+    update(delta) {
+        this.shark.update();
+        //doorloopt alle fishes
+        for (const fish of this.fishes){
+            fish.update(delta);
+            for (const fish2 of this.fishes){
+                //collision tussen fish en fish2
+                if (fish != fish2) {
+                    if (this.collision(fish, fish2)) fish.tint = 16711680;
+                }
+                //collision tussen de shark en fish
+                if (this.collision(this.shark, fish)) // console.log("SHARK ATTACK!!!!");
+                this.pixi.stage.removeChild(fish);
+            }
+        }
+        // when the shark is the only survivor
+        if (this.pixi.stage.children.filter((object)=>object instanceof _fish.Fish
+        ).length === 0) {
+            console.log("YOU WIN");
+            let text = new _pixiJs.Text("You WIN!!", {
+                fill: [
+                    "#ffffff"
+                ]
+            });
+            text.x = this.pixi.screen.width / 2;
+            text.y = this.pixi.screen.height / 2;
+            this.pixi.stage.addChild(text);
+        }
+    }
+    collision(sprite1, sprite2) {
+        const bounds1 = sprite1.getBounds();
+        const bounds2 = sprite2.getBounds();
+        return bounds1.x < bounds2.x + bounds2.width && bounds1.x + bounds1.width > bounds2.x && bounds1.y < bounds2.y + bounds2.height && bounds1.y + bounds1.height > bounds2.y;
+    }
+}
+
+},{"pixi.js":"dsYej","./images/fish.png":"MxhAt","./images/shark.png":"g0ugm","./fish":"7VsCH","./shark":"kN3uI","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./images/gameAchtergrond.jpg":"pOQXy"}],"MxhAt":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('8xX2B') + "fish.510b053c.png" + "?" + Date.now();
 
 },{"./helpers/bundle-url":"lgJ39"}],"lgJ39":[function(require,module,exports) {
@@ -37157,10 +37203,7 @@ exports.getBundleURL = getBundleURLCached;
 exports.getBaseURL = getBaseURL;
 exports.getOrigin = getOrigin;
 
-},{}],"8pgKm":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('8xX2B') + "water.59ff4e4f.jpg" + "?" + Date.now();
-
-},{"./helpers/bundle-url":"lgJ39"}],"g0ugm":[function(require,module,exports) {
+},{}],"g0ugm":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('8xX2B') + "shark.29daeb95.png" + "?" + Date.now();
 
 },{"./helpers/bundle-url":"lgJ39"}],"7VsCH":[function(require,module,exports) {
@@ -37204,7 +37247,8 @@ parcelHelpers.export(exports, "Shark", ()=>Shark
 );
 var _pixiJs = require("pixi.js");
 class Shark extends _pixiJs.Sprite {
-    speed = 0;
+    xspeed = 0;
+    yspeed = 0;
     constructor(texture, game){
         super(texture);
         this.game = game;
@@ -37218,15 +37262,20 @@ class Shark extends _pixiJs.Sprite {
         );
     }
     onKeyDown(e) {
-        if (e.key === "ArrowUp") this.speed = -5;
-        if (e.key === "ArrowDown") this.speed = 5;
+        if (e.key === "ArrowUp") this.yspeed = -3;
+        if (e.key === "ArrowDown") this.yspeed = 3;
+        if (e.key === "ArrowLeft") this.xspeed = -3;
+        if (e.key === "ArrowRight") this.xspeed = 3;
     }
     onKeyUp(e) {
-        if (e.key === "ArrowUp" || e.key === "ArrowDown") this.speed = 0;
+        if (e.key === "ArrowUp" || e.key === "ArrowDown" || e.key === "ArrowLeft" || e.key === "ArrowRight") {
+            this.xspeed = 0;
+            this.yspeed = 0;
+        }
     }
     update() {
-        this.x -= 10;
-        this.y += this.speed;
+        this.y += this.yspeed;
+        this.x += this.xspeed;
         this.keepInScreen();
     }
     keepInScreen() {
@@ -37234,33 +37283,12 @@ class Shark extends _pixiJs.Sprite {
     }
 }
 
-},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hHDeU":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "Button", ()=>Button
-);
-var _pixiJs = require("pixi.js");
-class Button extends _pixiJs.Graphics {
-    constructor(x, y){
-        super();
-        this.beginFill(65280);
-        this.drawRoundedRect(0, 0, 250, 80, 15);
-        this.endFill();
-        this.x = x - this.getBounds().width / 2;
-        this.y = y - this.getBounds().height / 2;
-        const startText = new _pixiJs.Text("Start Game", {
-            "fontFamily": "\"Lucida Console\", Monaco, monospace",
-            "fontSize": 30,
-            "fontWeight": "bold"
-        });
-        startText.x = this.getBounds().width / 2;
-        startText.x = this.getBounds().height / 2;
-        this.addChild(startText);
-        this.buttonMode = true;
-        this.interactive = true;
-    }
-}
+},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"pOQXy":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('8xX2B') + "gameAchtergrond.86e34989.jpg" + "?" + Date.now();
 
-},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["cGvIw","cS4Fe"], "cS4Fe", "parcelRequirea0e5")
+},{"./helpers/bundle-url":"lgJ39"}],"1xDNr":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('8xX2B') + "mexicoAchtergrond.157abfb3.jpg" + "?" + Date.now();
+
+},{"./helpers/bundle-url":"lgJ39"}]},["cGvIw","cS4Fe"], "cS4Fe", "parcelRequirea0e5")
 
 //# sourceMappingURL=index.1b34d9e1.js.map

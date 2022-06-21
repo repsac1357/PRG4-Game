@@ -2,7 +2,8 @@ import * as PIXI from "pixi.js";
 import { Game } from "./game";
 
 export class Shark extends PIXI.Sprite {
-  private speed: number = 0;
+  private xspeed: number = 0;
+  private yspeed: number = 0;
   private game: Game;
   constructor(texture: PIXI.Texture, game: Game) {
     super(texture);
@@ -18,22 +19,28 @@ export class Shark extends PIXI.Sprite {
 
   onKeyDown(e: KeyboardEvent): any {
     if (e.key === "ArrowUp") {
-      this.speed = -5;
+      this.yspeed = -3;
     }
     if (e.key === "ArrowDown") {
-      this.speed = 5;
+      this.yspeed = 3;
+    }
+    if (e.key === "ArrowLeft") {
+      this.xspeed = -3;
+    }
+    if (e.key === "ArrowRight") {
+      this.xspeed = 3;
     }
   }
   onKeyUp(e: KeyboardEvent): any {
-    if (e.key === "ArrowUp" || e.key === "ArrowDown") {
-      this.speed = 0;
+    if (e.key === "ArrowUp" || e.key === "ArrowDown" || e.key === "ArrowLeft" || e.key === "ArrowRight") {
+      this.xspeed = 0;
+      this.yspeed = 0;
     }
   }
 
   public update() {
-    this.x -= 10;
-    this.y += this.speed;
-
+    this.y += this.yspeed;
+    this.x += this.xspeed;
     this.keepInScreen();
   }
 

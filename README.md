@@ -1,3 +1,11 @@
+colour codes:
+
+#FFBA00
+#A98C5C
+#FFEDCB
+#005248
+
+
 <<<<<<< HEAD
 # PixiJS Startproject
 

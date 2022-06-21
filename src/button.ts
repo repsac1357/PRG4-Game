@@ -5,7 +5,7 @@ export class Button extends PIXI.Graphics{
     constructor(x: number, y: number){
         super()
 
-        this.beginFill(0x00ff00)
+        this.beginFill(0xFFBA00)
         this.drawRoundedRect(0, 0, 250, 80, 15)
         this.endFill()
         
@@ -18,7 +18,7 @@ export class Button extends PIXI.Graphics{
             "fontWeight": "bold"
         })
         startText.x = this.getBounds().width / 2
-        startText.x = this.getBounds().height / 2
+        startText.x =  this.getBounds().height / 3
 
         this.addChild(startText)
 

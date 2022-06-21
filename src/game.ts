@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import fishImage from "./images/fish.png";
-import waterImage from "./images/water.jpg";
+import gameAchtergrondImage from "./images/gameAchtergrond.jpg";
 import sharkImage from "./images/shark.png";
 import { Fish } from "./fish";
 import { Shark } from "./shark";
@@ -19,7 +19,7 @@ export class Game {
       this.loader = new PIXI.Loader();
       this.loader
         .add("fishTexture", fishImage)
-        .add("waterTexture", waterImage)
+        .add("gameAchtergrondTexture", gameAchtergrondImage)
         .add("sharkTexture", sharkImage);
       this.loader.load(() => this.loadCompleted());
   }
@@ -29,7 +29,7 @@ export class Game {
   loadCompleted() {
     // first load background
     let background = new PIXI.Sprite(
-      this.loader.resources["waterTexture"].texture!
+      this.loader.resources["gameAchtergrondTexture"].texture!
     );
     background.scale.set(
       window.innerWidth / background.getBounds().width,
